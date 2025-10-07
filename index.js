@@ -1,28 +1,26 @@
 const express = require('express');
-const mysql = require('mysql2');
+const exphbs = require('express-handlebars');
+const conn = require('./db/conn');
+const Task = require('./models/Task');
+const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
+app.use(express.static('public'));
 
-db.connect(err => {
-  if (err) {
-    console.error('Erro ao conectar ao MySQL:', err);
-    process.exit(1);
-  }
-  console.log('Conectado ao MySQL com sucesso.');
-});
+app.use('/tasks', taskRoutes);
+app.get('/', (req, res) => res.redirect('/tasks'));
 
-app.get('/', (req, res) => {
-  res.send('Servidor Node.js com MySQL e Express ativo!');
-});
-
-app.listen(port, () => {
-  console.log(`Aplicação rodando em http://localhost:${port}`);
-});
+conn
+  .sync()
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(`Servidor rodando com sucesso em http://localhost:${PORT}`)
+    );
+  })
+  .catch((err) => console.log('Erro ao conectar com o banco de dados:', err));
