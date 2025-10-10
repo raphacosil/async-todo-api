@@ -13,6 +13,9 @@ const Task = db.define('Task', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  dueDate: {
+    type: DataTypes.DATEONLY,
+  }
 });
 
 module.exports = Task;

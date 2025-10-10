@@ -9,8 +9,17 @@ const PORT = 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.engine('handlebars', exphbs());
+
+const hbs = exphbs.create({
+  extname: '.handlebars',
+  helpers: {
+    eq: (a, b) => a === b
+  }
+});
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+
 app.use(express.static('public'));
 
 app.use('/tasks', taskRoutes);

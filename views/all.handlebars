@@ -1,19 +1,36 @@
+<h2>Filtrar Tarefas:</h2>
+<form method="get" action="/tasks">
+  <select name="status" onchange="this.form.submit()">
+    <option value="">Todas</option>
+    <option value="done" {{#if (eq status "done")}}selected{{/if}}>Concluídas</option>
+    <option value="pending" {{#if (eq status "pending")}}selected{{/if}}>Pendentes</option>
+  </select>
+</form>
+
 <h2>Todas as Tarefas:</h2>
 {{#if tasks.length}}
   <ul>
     {{#each tasks}}
       <li>
-        <b>{{this.title}}</b> - {{this.description}} - 
-        {{#if this.done}}
+        <div class="task-info">
+          <b>{{this.title}}</b> - {{this.description}}
+        </div>
+
+        <div class="task-status {{#if this.done}}status-done{{else}}status-pending{{/if}}">
+          {{#if this.done}}
             Concluída
-        {{else}}
-            Pendente
-        {{/if}}
-        <a href="/tasks/edit/{{this.id}}">Editar</a>
-        <form style="display:inline;" method="post" action="/tasks/delete">
-          <input type="hidden" name="id" value="{{this.id}}"/>
-          <button type="submit">Excluir</button>
-        </form>
+          {{else}}
+            Pendente - Entrega: {{this.dueDate}}
+          {{/if}}
+        </div>
+
+        <div class="actions">
+          <a href="/tasks/edit/{{this.id}}">Editar</a>
+          <form method="post" action="/tasks/delete">
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button type="submit">Excluir</button>
+          </form>
+        </div>
       </li>
     {{/each}}
   </ul>

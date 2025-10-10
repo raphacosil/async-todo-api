@@ -2,7 +2,12 @@
 <form action="/tasks/create" method="post">
   <label>Título:</label><br>
   <input type="text" name="title" placeholder="O que precisa ser feito?" required/><br>
+
   <label>Descrição:</label><br>
-  <input type="text" name="description" placeholder="Algum detalhe extra?" /><br><br>
+  <input type="text" name="description" placeholder="Algum detalhe extra?" /><br>
+
+  <label>Data de entrega:</label><br>
+  <input type="date" name="dueDate"/><br><br>
+
   <button type="submit">Criar Tarefa</button>
 </form>

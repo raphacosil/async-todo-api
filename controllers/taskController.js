@@ -2,8 +2,14 @@ const Task = require('../models/Task');
 
 module.exports = {
   async showTasks(req, res) {
-    const tasks = await Task.findAll({ raw: true });
-    res.render('all', { tasks });
+    const { status } = req.query;
+    let where = {};
+
+    if (status === 'done') where.done = true;
+    else if (status === 'pending') where.done = false;
+
+    const tasks = await Task.findAll({ where, raw: true });
+    res.render('all', { tasks, status });
   },
 
   createTask(req, res) {
@@ -14,9 +20,9 @@ module.exports = {
     await Task.create({
       title: req.body.title,
       description: req.body.description,
-      done: false, 
+      done: false,
+      dueDate: req.body.dueDate || null
     });
-
     res.redirect('/tasks');
   },
 
@@ -29,15 +35,15 @@ module.exports = {
   },
 
   async updateTask(req, res) {
-    const id = req.body.id;
+    const done = req.body.done === 'on';
     await Task.update(
       {
         title: req.body.title,
         description: req.body.description,
-
-        done: req.body.done === 'on' ? true : false,
+        done: done,
+        dueDate: req.body.dueDate || null
       },
-      { where: { id: id } } 
+      { where: { id: req.body.id } }
     );
     res.redirect('/tasks');
   },

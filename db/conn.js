@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('db_task', 'postgres', '1234', {
   host: '127.0.0.1',
   dialect: 'postgres',
-  port: 5432, // padrão do PostgreSQL
+  port: 5432,
   logging: false,
 });
 
